@@ -17,7 +17,7 @@ const auth = getAuth(app);
  * @param password
  * @returns
  */
-export const register = async (param: AuthParam): Promise<User | AuthError> => {
+export const register = async (param: AuthParam): Promise<User> => {
   try {
     const { email, password } = param;
     const userCredential = await createUserWithEmailAndPassword(
@@ -27,8 +27,8 @@ export const register = async (param: AuthParam): Promise<User | AuthError> => {
     );
     const user = userCredential.user;
     return user;
-  } catch (error) {
-    return error as AuthError;
+  } catch (error: any) {
+    return error;
   }
 };
 
@@ -38,7 +38,7 @@ export const register = async (param: AuthParam): Promise<User | AuthError> => {
  * @param password
  * @returns
  */
-export const login = async (param: AuthParam): Promise<User | AuthError> => {
+export const login = async (param: AuthParam): Promise<User> => {
   try {
     const { email, password } = param;
     const userCredential = await signInWithEmailAndPassword(
@@ -48,8 +48,8 @@ export const login = async (param: AuthParam): Promise<User | AuthError> => {
     );
     const user = userCredential.user;
     return user;
-  } catch (error) {
-    return error as AuthError;
+  } catch (error: any) {
+    return error;
   }
 };
 
@@ -57,11 +57,11 @@ export const login = async (param: AuthParam): Promise<User | AuthError> => {
  * Logout user from firebase
  * @returns
  */
-export const logOut = async (): Promise<boolean | AuthError> => {
+export const logOut = async (): Promise<boolean> => {
   try {
     await signOut(auth);
     return true;
-  } catch (error) {
-    return error as AuthError;
+  } catch (error: any) {
+    return error;
   }
 };
