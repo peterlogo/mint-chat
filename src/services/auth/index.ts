@@ -57,10 +57,10 @@ export const login = async (param: AuthParam): Promise<User> => {
  * Logout user from firebase
  * @returns
  */
-export const logOut = async (): Promise<boolean> => {
+export const logOut = async (): Promise<void> => {
   try {
     await signOut(auth);
-    return true;
+    return;
   } catch (error: any) {
     return error;
   }
