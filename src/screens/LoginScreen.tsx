@@ -2,6 +2,8 @@ import { Box, Button, FormControl, Input, Stack } from "native-base";
 import { GlobalStyles } from "../constants";
 import { useState } from "react";
 import { StyleSheet, Text } from "react-native";
+import { loginUser } from "../features";
+import { useAppDispatch, useAppSelector } from "../hooks";
 
 const { colors } = GlobalStyles;
 
@@ -11,6 +13,14 @@ export function LoginScreen({ navigation }: any) {
 
   const handleChangeEmail = (value: string) => setEmail(value);
   const handleChangePassword = (value: string) => setPassword(value);
+
+  const dispatch = useAppDispatch();
+
+  const { loading, error } = useAppSelector((state) => state.auth);
+
+  const handleLogin = async () => {
+    await dispatch(loginUser({ email, password }));
+  };
 
   return (
     <Box style={styles.container}>
@@ -41,7 +51,9 @@ export function LoginScreen({ navigation }: any) {
         </FormControl>
       </Stack>
       <Stack space={4} style={styles.buttonContainer}>
-        <Button>Login</Button>
+        <Button onPress={handleLogin} isLoading={loading === "pending"}>
+          Login
+        </Button>
         <Button
           variant="outline"
           onPress={() => navigation.navigate("Register")}

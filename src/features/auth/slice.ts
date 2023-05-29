@@ -1,16 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { User } from "firebase/auth";
-import { loginUser, registerUser } from "./thunks";
+import { loginUser, registerUser, logoutUser } from "./thunks";
 import { LoadingState } from "../../types";
 
 interface AuthState {
-  user: User | null;
+  user: string | null;
   loading: LoadingState;
+  error: string | null;
 }
 
 const initialState: AuthState = {
   user: null,
   loading: "idle",
+  error: null,
 };
 
 const authSlice = createSlice({
@@ -26,8 +28,9 @@ const authSlice = createSlice({
     builder.addCase(registerUser.pending, (state) => {
       state.loading = "pending";
     });
-    builder.addCase(registerUser.rejected, (state) => {
+    builder.addCase(registerUser.rejected, (state, action: any) => {
       state.loading = "failed";
+      state.error = action.payload?.errorMessage;
     });
 
     // Login
@@ -38,16 +41,17 @@ const authSlice = createSlice({
     builder.addCase(loginUser.pending, (state) => {
       state.loading = "pending";
     });
-    builder.addCase(loginUser.rejected, (state) => {
+    builder.addCase(loginUser.rejected, (state, action: any) => {
       state.loading = "failed";
+      state.error = action.payload?.errorMessage;
     });
 
     // Logout
-    builder.addCase(loginUser.fulfilled, (state) => {
+    builder.addCase(logoutUser.fulfilled, (state) => {
       state.user = null;
       state.loading = "succeeded";
     });
-    builder.addCase(loginUser.rejected, (state) => {
+    builder.addCase(logoutUser.rejected, (state) => {
       state.loading = "failed";
     });
   },

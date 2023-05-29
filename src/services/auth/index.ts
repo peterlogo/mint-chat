@@ -28,7 +28,7 @@ export const register = async (param: AuthParam): Promise<User> => {
     const user = userCredential.user;
     return user;
   } catch (error: any) {
-    return error;
+    throw error;
   }
 };
 
@@ -49,7 +49,7 @@ export const login = async (param: AuthParam): Promise<User> => {
     const user = userCredential.user;
     return user;
   } catch (error: any) {
-    return error;
+    throw error;
   }
 };
 
@@ -62,6 +62,6 @@ export const logOut = async (): Promise<void> => {
     await signOut(auth);
     return;
   } catch (error: any) {
-    return error;
+    throw error;
   }
 };

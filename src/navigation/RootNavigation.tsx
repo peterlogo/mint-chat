@@ -1,17 +1,15 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { NativeBaseProvider } from "native-base";
-import { User } from "firebase/auth";
 import { AuthNavigation } from "./AuthNavigation";
-
-export interface RootNavigationProps {
-  user: User;
-}
+import { AppNavigation } from "./AppNavigation";
+import { useAppSelector } from "../hooks";
 
 export const RootNavigation = () => {
+  const user = useAppSelector((state) => state.auth.user);
   return (
     <NativeBaseProvider>
       <NavigationContainer>
-        <AuthNavigation />
+        {user ? <AppNavigation /> : <AuthNavigation />}
       </NavigationContainer>
     </NativeBaseProvider>
   );

@@ -1,7 +1,9 @@
-import { StyleSheet, Text } from "react-native";
+import { useState } from "react";
+import { StyleSheet, Text, Alert } from "react-native";
 import { Box, Button, FormControl, Input, Stack } from "native-base";
 import { GlobalStyles } from "../constants";
-import { useState } from "react";
+import { useAppDispatch, useAppSelector } from "../hooks";
+import { registerUser } from "../features";
 
 const { colors } = GlobalStyles;
 
@@ -10,9 +12,24 @@ export function RegisterScreen({ navigation }: any) {
   const [password, setPassword] = useState<string>("");
   const [confirm, setConfirm] = useState<string>("");
 
+  const [passwordErr, setPasswordErr] = useState<boolean>(false);
+
   const handleChangeEmail = (value: string) => setEmail(value);
   const handleChangePassword = (value: string) => setPassword(value);
   const handleChangeConfirm = (value: string) => setConfirm(value);
+
+  const dispatch = useAppDispatch();
+  const { loading, error } = useAppSelector((state) => state.auth);
+
+  const handleRegister = async () => {
+    if (password !== confirm) {
+      setPasswordErr(true);
+      return;
+    }
+    await dispatch(registerUser({ email, password }));
+  };
+
+  if (error) Alert.alert("Error", error);
 
   return (
     <Box style={styles.container}>
@@ -33,7 +50,7 @@ export function RegisterScreen({ navigation }: any) {
             onChangeText={handleChangeEmail}
           />
         </FormControl>
-        <FormControl isRequired>
+        <FormControl isRequired isInvalid={passwordErr}>
           <FormControl.Label>Password</FormControl.Label>
           <Input
             value={password}
@@ -43,7 +60,7 @@ export function RegisterScreen({ navigation }: any) {
             onChangeText={handleChangePassword}
           />
         </FormControl>
-        <FormControl isRequired>
+        <FormControl isRequired isInvalid={passwordErr}>
           <FormControl.Label>Confirm Password</FormControl.Label>
           <Input
             value={confirm}
@@ -52,10 +69,15 @@ export function RegisterScreen({ navigation }: any) {
             placeholder="Enter password"
             onChangeText={handleChangeConfirm}
           />
+          <FormControl.ErrorMessage>
+            Passwords do not match
+          </FormControl.ErrorMessage>
         </FormControl>
       </Stack>
       <Stack space={4} style={styles.buttonContainer}>
-        <Button>Create Account</Button>
+        <Button onPress={handleRegister} isLoading={loading === "pending"}>
+          Create Account
+        </Button>
         <Button variant="outline" onPress={() => navigation.navigate("Login")}>
           Login
         </Button>

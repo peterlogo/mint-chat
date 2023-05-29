@@ -8,8 +8,7 @@ export const registerUser = createAsyncThunk(
     const { email, password } = data;
     try {
       const user = await register({ email, password });
-      console.log("User:", user);
-      return user;
+      return user.uid;
     } catch (error: any) {
       const errorCode = error.code;
       const errorMessage = error.message;
@@ -24,8 +23,7 @@ export const loginUser = createAsyncThunk(
     const { email, password } = data;
     try {
       const user = await login({ email, password });
-      console.log("User:", user);
-      return user;
+      return user.uid;
     } catch (error: any) {
       const errorCode = error.code;
       const errorMessage = error.message;
